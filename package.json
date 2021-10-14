@@ -12,6 +12,7 @@
     "discord.js": "^13.2.0"
   },
   "devDependencies": {
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.4"
   }
 }
