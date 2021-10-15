@@ -10,7 +10,11 @@
     "clean": "rimraf dist/*",
     "tsc": "tsc",
     "build": "npm-run-all clean tsc",
-    "start": "node ."
+    "start": "node .",
+    "check-types": "tsc --noEmit",
+    "eslint": "eslint src/**/*.ts",
+    "eslint:fix": "eslint src/**/*.ts --fix",
+    "lint": "npm-run-all eslint check-types"
   },
   "author": "Skyzi000",
   "license": "MIT",
