@@ -27,7 +27,7 @@ client.on("message", async message => {
         return;
     }
     if (client.user !== null && message.mentions.users.has(client.user.id)) {
-        const cmds = message.content.split(" ").slice(1);
+        const cmds = message.content.split(" ").slice(1).filter((value) => value.trim() !== "");
         console.log(`Commands: ${cmds.join(", ")}`);
         switch (cmds[0].trim()) {
             case "setnc":
