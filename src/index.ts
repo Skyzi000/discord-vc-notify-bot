@@ -33,8 +33,20 @@ client.on("message", async message => {
             case "setnc":
             case "set_notification_channel":
             case "通知チャンネル":
-                notifyChannel = message.channel;
-                await message.reply("ここを通知チャンネルに設定しました。");
+                if (cmds.length == 1) {
+                    notifyChannel = message.channel;
+                    await message.reply(`<#${notifyChannel.id}> を通知チャンネルに設定しました。`);
+                }
+                else {
+                    const nc = await client.channels.fetch(cmds[1].trim());
+                    if (nc !== null && nc.isText()) {
+                        notifyChannel = nc;
+                        await message.reply(`<#${nc.id}> を通知チャンネルに設定しました。`);
+                    }
+                    else {
+                        await message.reply("チャンネルIDが正しくありません");
+                    }
+                }
                 break;
 
             default:
@@ -43,10 +55,6 @@ client.on("message", async message => {
         }
     }
 });
-
-
-
-client.login(process.env.DISCORD_BOT_TOKEN);
 
 async function onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
     if (oldState.channelId !== newState.channelId) {
@@ -60,3 +68,5 @@ async function onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
         }
     }
 }
+
+client.login(process.env.DISCORD_BOT_TOKEN);
