@@ -10,18 +10,31 @@ COPY . .
 RUN npm run build
 
 
-FROM node:alpine as production
+FROM node:alpine as module
 
-WORKDIR /bot
+WORKDIR /module
 
 COPY package*.json .
+RUN npm install --production
 
-RUN npm install --production &&\
-    npm uninstall -g npm
 
-COPY --from=build /build/dist .
-RUN mkdir data
+FROM alpine:latest as production
+
 ENV NODE_ENV=production
+
+# mkdir data
+WORKDIR /bot/data
+WORKDIR /bot
+
+RUN apk update &&\
+    apk add --no-cache libstdc++
+
+# copy latest nodejs
+COPY --from=module /usr/local/ /usr/local/
+# copy modules
+COPY --from=module /module/node_modules ./node_modules
+# copy app
+COPY --from=build /build/dist .
 
 VOLUME [ "/bot/data" ]
 
