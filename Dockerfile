@@ -10,16 +10,21 @@ COPY . .
 RUN npm run build
 
 
-FROM node:alpine
+FROM alpine:latest as runner
 
 WORKDIR /bot
 
 COPY package*.json .
-RUN npm install
 
-COPY --from=build /build/dist ./dist
+RUN apk update &&\
+    apk add --no-cache nodejs npm &&\
+    npm install --production &&\
+    apk del npm
+
+COPY --from=build /build/dist .
 RUN mkdir data
+ENV NODE_ENV=production
 
 VOLUME [ "/bot/data" ]
 
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT [ "node", "/bot/index.js" ]
