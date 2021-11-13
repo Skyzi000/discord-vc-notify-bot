@@ -62,16 +62,16 @@ client.on("message", async message => {
 });
 
 async function onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
-    if (oldState.channelId !== newState.channelId) {
-        if (newState.channelId !== null && newState.channel?.members.size === 1) {
-            const notifyChannel = await getNotifyChannel(newState.guild.id);
-            if (notifyChannel === undefined) {
-                newState.member?.send("通話開始を通知するチャンネルが設定されていません。\n`setnc`コマンドを使って設定してください。");
-                return;
-            }
-            const username = newState.member?.displayName;
-            await notifyChannel.send(`${username} さんが <#${newState.channelId}> で通話を開始しました。`);
+    if (oldState.channel !== null || newState.channel === null || oldState.channelId == newState.channelId) {
+        return;
+    }
+    if (newState.member !== null && newState.channel.members.size === 1) {
+        const notifyChannel = await getNotifyChannel(newState.guild.id);
+        if (notifyChannel === undefined) {
+            newState.member.send("通話開始を通知するチャンネルが設定されていません。\n`setnc`コマンドを使って設定してください。");
+            return;
         }
+        await notifyChannel.send(`<@${newState.member.id}> さんが <#${newState.channelId}> で通話を開始しました。`);
     }
 }
 
