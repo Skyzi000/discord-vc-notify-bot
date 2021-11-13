@@ -1,7 +1,7 @@
 import { Client, Intents, TextBasedChannels, VoiceState } from "discord.js";
 import Keyv from 'keyv';
 
-const notifyChannels = new Keyv("sqlite://db.sqlite", { table: "notifyChannel" });
+const notifyChannels = new Keyv("sqlite://data/db.sqlite", { table: "notifyChannel" });
 
 // .envファイルから環境変数の読み込み
 if (process.env.NODE_ENV !== "production") {
