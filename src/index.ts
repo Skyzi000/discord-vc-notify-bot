@@ -84,7 +84,7 @@ async function getNotifyChannel(guildId: string): Promise<TextBasedChannels | un
     if (!id) {
         return undefined;
     }
-    const ch = await client.channels.fetch(guildId);
+    const ch = await client.channels.fetch(id);
     if (ch?.isText()) {
         return ch;
     }
