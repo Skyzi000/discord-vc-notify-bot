@@ -10,16 +10,14 @@ COPY . .
 RUN npm run build
 
 
-FROM alpine:latest as runner
+FROM node:alpine as production
 
 WORKDIR /bot
 
 COPY package*.json .
 
-RUN apk update &&\
-    apk add --no-cache nodejs npm &&\
-    npm install --production &&\
-    apk del npm
+RUN npm install --production &&\
+    npm uninstall -g npm
 
 COPY --from=build /build/dist .
 RUN mkdir data
