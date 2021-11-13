@@ -1,0 +1,10 @@
+version: "3"
+services:
+  vc-notify-bot:
+    container_name: vc-notify-bot
+    image: skyzi000/discord-vc-notify-bot:latest
+    volumes:
+      - ./data:/bot/data
+    environment:
+      - DISCORD_BOT_TOKEN=
+    # restart: always
