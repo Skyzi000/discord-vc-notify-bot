@@ -1,10 +1,16 @@
-version: "3"
+version: "3.7"
 services:
-  vc-notify-bot:
+  bot:
     container_name: vc-notify-bot
     image: skyzi000/discord-vc-notify-bot:latest
     volumes:
       - ./data:/bot/data
     environment:
-      - DISCORD_BOT_TOKEN=
+      - DISCORD_BOT_TOKEN_FILE=/run/secrets/bot_token
+    secrets:
+      - bot_token
     # restart: always
+
+secrets:
+  bot_token:
+    file: ./secret_bot_token.txt
