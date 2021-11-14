@@ -26,6 +26,7 @@ Discordのボイスチャンネルへの入室を通知するBot
 ![setnc-with-id](https://user-images.githubusercontent.com/38061609/141670434-28aa9e68-27e7-44cb-becc-52bbbf14acb5.png)
 
 チャンネルIDを入力しない場合はこのコマンドを入力したチャンネルを通知チャンネルに設定します。
+
 ![setnc-without-id](https://user-images.githubusercontent.com/38061609/141670252-6b80b499-e229-447c-b7ab-80196cd0073f.png)
 
 ## 初回起動(docker-composeを使用)
