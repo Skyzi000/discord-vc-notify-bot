@@ -60,7 +60,7 @@ client.on("message", async message => {
     if (message.mentions.users.has(client.user.id)) {
         const cmds = message.content.split(" ").slice(1).filter((value) => value.trim() !== "");
         console.log(`Commands: ${cmds.join(", ")}`);
-        switch (cmds[0].trim()) {
+        switch (cmds[0]?.trim()) {
             case "setnc":
             case "set_notification_channel":
             case "通知チャンネル":
