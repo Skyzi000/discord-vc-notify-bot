@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "production") {
         }
     }
     else {
-        discordBotToken = readFileSync(tokenFile, "utf-8");
+        discordBotToken = readFileSync(tokenFile, "utf-8").trim();
     }
 }
 else {
