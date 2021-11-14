@@ -71,7 +71,7 @@ client.on("message", async message => {
                 else {
                     let nc;
                     try {
-                        nc = await client.channels.fetch(cmds[1].trim());
+                        nc = await client.channels.fetch(cmds[1].replace(/[<#> 　]/g, ""));
                     } catch (DiscordAPIError) {
                         await message.reply("チャンネルIDが正しくありません");
                         break;
