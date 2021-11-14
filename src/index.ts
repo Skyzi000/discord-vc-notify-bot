@@ -87,6 +87,14 @@ client.on("message", async message => {
                     }
                 }
                 break;
+            case "delnc":
+            case "rmnc":
+            case "delete_notification_channel":
+            case "remove_notification_channel":
+                const key = `${message.guildId} ${message.channel.parentId}`;
+                delNotifyChannel(key);
+                await message.reply(`<#${message.channel.parentId}> カテゴリの通知設定を削除しました。`);
+                break;
 
             default:
                 await message.reply("呼んだ～？");
@@ -124,6 +132,10 @@ async function getNotifyChannel(key: string): Promise<TextBasedChannels | undefi
         return ch;
     }
     return undefined;
+}
+
+async function delNotifyChannel(key: string) {
+    await notifyChannels.delete(key);
 }
 
 client.login(discordBotToken);
