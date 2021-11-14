@@ -1,4 +1,4 @@
-FROM node:alpine as build
+FROM node:alpine as builder
 
 WORKDIR /build
 
@@ -30,11 +30,11 @@ RUN apk update &&\
     apk add --no-cache libstdc++
 
 # copy latest nodejs
-COPY --from=module /usr/local/ /usr/local/
+COPY --from=module /usr/local/bin/node /usr/local/bin/node
 # copy modules
 COPY --from=module /module/node_modules ./node_modules
 # copy app
-COPY --from=build /build/dist .
+COPY --from=builder /build/dist .
 
 VOLUME [ "/bot/data" ]
 
