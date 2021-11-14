@@ -1,12 +1,38 @@
 import { Client, Intents, TextBasedChannels, VoiceState } from "discord.js";
+import { existsSync, readFileSync } from "fs";
 import Keyv from 'keyv';
 
-const notifyChannels = new Keyv("sqlite://data/db.sqlite", { table: "notifyChannel" });
+let discordBotToken: string;
 
-// .envファイルから環境変数の読み込み
-if (process.env.NODE_ENV !== "production") {
-    require("dotenv").config();
+if (process.env.NODE_ENV === "production") {
+    const tokenFile = process.env.DISCORD_BOT_TOKEN_FILE;
+    if (tokenFile === undefined || !existsSync(tokenFile)) {
+        if (process.env.DISCORD_BOT_TOKEN === undefined) {
+            console.error("'DISCORD_BOT_TOKEN'を設定してください。")
+            process.exit(1);
+        }
+        else {
+            discordBotToken = process.env.DISCORD_BOT_TOKEN;
+            console.warn(
+                "環境変数'DISCORD_BOT_TOKEN'ではなく、secretsの利用をお勧めします。\n" +
+                "参考: https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets")
+        }
+    }
+    else {
+        discordBotToken = readFileSync(tokenFile, "utf-8");
+    }
 }
+else {
+    // .envファイルから環境変数の読み込み
+    require("dotenv").config();
+    if (process.env.DISCORD_BOT_TOKEN === undefined) {
+        console.error("'DISCORD_BOT_TOKEN'を設定してください。")
+        process.exit(1);
+    }
+    discordBotToken = process.env.DISCORD_BOT_TOKEN;
+}
+
+const notifyChannels = new Keyv("sqlite://data/db.sqlite", { table: "notifyChannel" });
 
 const client: Client = new Client({
     intents: [
@@ -91,4 +117,4 @@ async function getNotifyChannel(guildId: string): Promise<TextBasedChannels | un
     return undefined;
 }
 
-client.login(process.env.DISCORD_BOT_TOKEN);
+client.login(discordBotToken);
