@@ -69,8 +69,14 @@ client.on("message", async message => {
                     await message.reply(`<#${message.channelId}> を通知チャンネルに設定しました。`);
                 }
                 else {
-                    const nc = await client.channels.fetch(cmds[1].trim());
-                    if (nc !== null && nc.isText()) {
+                    let nc;
+                    try {
+                        nc = await client.channels.fetch(cmds[1].trim());
+                    } catch (DiscordAPIError) {
+                        await message.reply("チャンネルIDが正しくありません");
+                        break;
+                    }
+                    if (nc != null && nc.isText()) {
                         setNotifyChannel(nc, message.guildId);
                         await message.reply(`<#${nc.id}> を通知チャンネルに設定しました。`);
                     }
