@@ -54,7 +54,7 @@ client.once("ready", async () => {
 client.on("voiceStateUpdate", async (os, ns) => onVoiceStateUpdate(os, ns));
 
 client.on("message", async message => {
-    if (message.author.bot || message.guildId == null || client.user == null) {
+    if (message.author.bot || message.guildId == null || client.user == null || !(message.channel.type === "GUILD_TEXT" || message.channel.type === "GUILD_NEWS")) {
         return;
     }
     if (message.mentions.users.has(client.user.id)) {
@@ -65,8 +65,9 @@ client.on("message", async message => {
             case "set_notification_channel":
             case "通知チャンネル":
                 if (cmds.length == 1) {
-                    setNotifyChannel(message.channel, message.guildId);
-                    await message.reply(`<#${message.channelId}> を通知チャンネルに設定しました。`);
+                    const key = `${message.guildId} ${message.channel.parentId}`;
+                    setNotifyChannel(key, message.channel);
+                    await message.reply(`<#${message.channelId}> を <#${message.channel.parentId}> カテゴリの通知チャンネルに設定しました。`);
                 }
                 else {
                     let nc;
@@ -77,8 +78,9 @@ client.on("message", async message => {
                         break;
                     }
                     if (nc != null && nc.isText()) {
-                        setNotifyChannel(nc, message.guildId);
-                        await message.reply(`<#${nc.id}> を通知チャンネルに設定しました。`);
+                        const key = `${message.guildId} ${message.channel.parentId}`;
+                        setNotifyChannel(key, nc);
+                        await message.reply(`<#${nc.id}> を <#${message.channel.parentId}> カテゴリの通知チャンネルに設定しました。`);
                     }
                     else {
                         await message.reply("チャンネルIDが正しくありません");
@@ -98,21 +100,22 @@ async function onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
         return;
     }
     if (newState.member !== null && newState.channel.members.size === 1) {
-        const notifyChannel = await getNotifyChannel(newState.guild.id);
+        const key = `${newState.guild.id} ${newState.channel.parentId}`
+        const notifyChannel = await getNotifyChannel(key);
         if (notifyChannel === undefined) {
-            newState.member.send("通話開始を通知するチャンネルが設定されていません。\n`setnc`コマンドを使って設定してください。");
+            // newState.member.send("通話開始を通知するチャンネルが設定されていません。\n`setnc`コマンドを使って設定してください。");
             return;
         }
         await notifyChannel.send(`<@${newState.member.id}> さんが <#${newState.channelId}> で通話を開始しました。`);
     }
 }
 
-async function setNotifyChannel(channel: TextBasedChannels, guildId: string) {
-    await notifyChannels.set(guildId, channel.id);
+async function setNotifyChannel(key: string, channel: TextBasedChannels) {
+    await notifyChannels.set(key, channel.id);
 }
 
-async function getNotifyChannel(guildId: string): Promise<TextBasedChannels | undefined> {
-    const id = await notifyChannels.get(guildId);
+async function getNotifyChannel(key: string): Promise<TextBasedChannels | undefined> {
+    const id = await notifyChannels.get(key);
     if (!id) {
         return undefined;
     }
