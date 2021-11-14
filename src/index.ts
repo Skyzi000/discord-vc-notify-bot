@@ -60,7 +60,7 @@ client.on("message", async message => {
     if (message.mentions.users.has(client.user.id)) {
         const cmds = message.content.split(" ").slice(1).filter((value) => value.trim() !== "");
         console.log(`Commands: ${cmds.join(", ")}`);
-        switch (cmds[0].trim()) {
+        switch (cmds[0]?.trim()) {
             case "setnc":
             case "set_notification_channel":
             case "通知チャンネル":
@@ -69,8 +69,14 @@ client.on("message", async message => {
                     await message.reply(`<#${message.channelId}> を通知チャンネルに設定しました。`);
                 }
                 else {
-                    const nc = await client.channels.fetch(cmds[1].trim());
-                    if (nc !== null && nc.isText()) {
+                    let nc;
+                    try {
+                        nc = await client.channels.fetch(cmds[1].replace(/[<#> 　]/g, ""));
+                    } catch (DiscordAPIError) {
+                        await message.reply("チャンネルIDが正しくありません");
+                        break;
+                    }
+                    if (nc != null && nc.isText()) {
                         setNotifyChannel(nc, message.guildId);
                         await message.reply(`<#${nc.id}> を通知チャンネルに設定しました。`);
                     }
