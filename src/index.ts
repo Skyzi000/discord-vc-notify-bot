@@ -32,7 +32,7 @@ else {
     discordBotToken = process.env.DISCORD_BOT_TOKEN;
 }
 
-const notifyChannels = new Keyv("sqlite://data/db.sqlite", { table: "notifyChannel" });
+const notifyChannelData: { [guildId: string]: Keyv } = {};
 
 const client: Client = new Client({
     intents: [
@@ -65,8 +65,7 @@ client.on("message", async message => {
             case "set_notification_channel":
             case "通知チャンネル":
                 if (cmds.length == 1) {
-                    const key = `${message.guildId} ${message.channel.parentId}`;
-                    setNotifyChannel(key, message.channel);
+                    setNotifyChannel(message.guildId, message.channel.parentId, message.channel);
                     await message.reply(`<#${message.channelId}> を <#${message.channel.parentId}> カテゴリの通知チャンネルに設定しました。`);
                 }
                 else {
@@ -78,8 +77,7 @@ client.on("message", async message => {
                         break;
                     }
                     if (nc != null && nc.isText()) {
-                        const key = `${message.guildId} ${message.channel.parentId}`;
-                        setNotifyChannel(key, nc);
+                        setNotifyChannel(message.guildId, message.channel.parentId, nc);
                         await message.reply(`<#${nc.id}> を <#${message.channel.parentId}> カテゴリの通知チャンネルに設定しました。`);
                     }
                     else {
@@ -91,8 +89,7 @@ client.on("message", async message => {
             case "rmnc":
             case "delete_notification_channel":
             case "remove_notification_channel":
-                const key = `${message.guildId} ${message.channel.parentId}`;
-                delNotifyChannel(key);
+                delNotifyChannel(message.guildId, message.channel.parentId);
                 await message.reply(`<#${message.channel.parentId}> カテゴリの通知設定を削除しました。`);
                 break;
 
@@ -108,8 +105,7 @@ async function onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
         return;
     }
     if (newState.member !== null && newState.channel.members.size === 1) {
-        const key = `${newState.guild.id} ${newState.channel.parentId}`
-        const notifyChannel = await getNotifyChannel(key);
+        const notifyChannel = await getNotifyChannel(newState.guild.id, newState.channel.parentId);
         if (notifyChannel === undefined) {
             // newState.member.send("通話開始を通知するチャンネルが設定されていません。\n`setnc`コマンドを使って設定してください。");
             return;
@@ -118,12 +114,18 @@ async function onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
     }
 }
 
-async function setNotifyChannel(key: string, channel: TextBasedChannels) {
-    await notifyChannels.set(key, channel.id);
+async function setNotifyChannel(guildId: string, categoryId: string | null, channel: TextBasedChannels) {
+    if (!(guildId in notifyChannelData)) {
+        notifyChannelData[guildId] = new Keyv(`sqlite://data/${guildId}.sqlite`, { namespace: "notifyChannel" });
+    }
+    await notifyChannelData[guildId].set(categoryId ?? "null", channel.id);
 }
 
-async function getNotifyChannel(key: string): Promise<TextBasedChannels | undefined> {
-    const id = await notifyChannels.get(key);
+async function getNotifyChannel(guildId: string, categoryId: string | null): Promise<TextBasedChannels | undefined> {
+    if (!(guildId in notifyChannelData)) {
+        notifyChannelData[guildId] = new Keyv(`sqlite://data/${guildId}.sqlite`, { namespace: "notifyChannel" });
+    }
+    const id = await notifyChannelData[guildId].get(categoryId ?? "null");
     if (!id) {
         return undefined;
     }
@@ -134,8 +136,11 @@ async function getNotifyChannel(key: string): Promise<TextBasedChannels | undefi
     return undefined;
 }
 
-async function delNotifyChannel(key: string) {
-    await notifyChannels.delete(key);
+async function delNotifyChannel(guildId: string, categoryId: string | null) {
+    if (!(guildId in notifyChannelData)) {
+        notifyChannelData[guildId] = new Keyv(`sqlite://data/${guildId}.sqlite`, { namespace: "notifyChannel" });
+    }
+    return await notifyChannelData[guildId].delete(categoryId ?? "null");
 }
 
 client.login(discordBotToken);
