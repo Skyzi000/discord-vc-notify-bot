@@ -1,0 +1,30 @@
+name: Dependabot auto-approve
+
+# 参考: https://qiita.com/frozenbonito/items/6fb2fd438a7742eb7b5a#dependabot-auto-merge-%E5%A4%89%E6%9B%B4%E7%89%88
+
+on:
+  pull_request_target:
+    types:
+      - opened
+
+permissions:
+  pull-requests: read
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Approve a PR
+        if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
