@@ -18,6 +18,8 @@ on:
     branches: [ main ]
     paths-ignore:
       - '**.md'
+  pull_request_target:
+    branches: [main]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -35,12 +37,28 @@ jobs:
       contents: read
       packages: write
 
+    # push, pull_request は Dependabot 以外のユーザーのみ、
+    # pull_request_target は Dependabot のみが実行できる
+    # 参考: https://engineering.mobalab.net/2021/04/30/make-secrets-available-in-pull-request-opened-by-dependabot/
+    if: |
+      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
+      (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
-      - name: Checkout repository
+      - name: Checkout
+        if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v2
 
+      # pull_request_target 駆動の場合、コンテキストは Pull request のターゲットブランチ (main ブランチ) になるので、
+      # 当該 Pull request の HEAD コミットを明示的に指定しないと変更内容に対する CI を実行できない
+      - name: Checkout PR
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
       - name: Login to DockerHub
-        uses: docker/login-action@v1 
+        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
+        uses: docker/login-action@v1
         with:
           username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -48,7 +66,7 @@ jobs:
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Login to registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
@@ -71,6 +89,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' && github.event_name != 'pull_request_target' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
