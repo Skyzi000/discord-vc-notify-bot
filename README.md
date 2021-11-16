@@ -5,7 +5,7 @@
 [![Last Commit](https://img.shields.io/github/last-commit/Skyzi000/discord-vc-notify-bot)](https://github.com/Skyzi000/discord-vc-notify-bot/commits)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Skyzi000/discord-vc-notify-bot/Docker)](https://github.com/Skyzi000/discord-vc-notify-bot/actions/workflows/docker-publish.yml)
 
-![example](https://user-images.githubusercontent.com/38061609/141670525-01866d43-64ea-4114-b755-6ae15fd94fbb.png)
+![example](https://raw.githubusercontent.com/Skyzi000/discord-vc-notify-bot/main/images/example.png)
 
 Discordのボイスチャンネルへの入室を通知するBot
 
@@ -19,20 +19,23 @@ Discordのボイスチャンネルへの入室を通知するBot
 - Dockerがわからなくても(多分)使える
 
 ## コマンド
+
 コマンドはBotにメンションする形で入力します
 
 ### setnc [チャンネルID]
+
 カテゴリごとの通知チャンネルを設定します。
 
 チャンネルIDを入力した場合は、IDで指定されたチャンネルをコマンドを入力したカテゴリの通知チャンネルに設定します。
 
-![setnc-with-id](https://user-images.githubusercontent.com/38061609/141670434-28aa9e68-27e7-44cb-becc-52bbbf14acb5.png)
+![setnc-with-id](https://raw.githubusercontent.com/Skyzi000/discord-vc-notify-bot/main/images/setnc_with_id.png)
 
 チャンネルIDを入力しない場合は、このコマンドを入力したチャンネルをそのカテゴリの通知チャンネルに設定します。
 
-![setnc-without-id](https://user-images.githubusercontent.com/38061609/141670252-6b80b499-e229-447c-b7ab-80196cd0073f.png)
+![setnc-without-id](https://raw.githubusercontent.com/Skyzi000/discord-vc-notify-bot/main/images/setnc_without_id.png)
 
 ### delnc
+
 入力したカテゴリの通知設定を削除します。
 
 ## 初回起動(docker-composeを使用)
@@ -71,4 +74,3 @@ Discordのボイスチャンネルへの入室を通知するBot
 ```
 
 に変更(コメントアウトを解除)してから起動する
-
