@@ -1,31 +1,21 @@
 name: Dependabot auto-merge
 
 on:
-  workflow_run:
-    workflows:
-      - Docker # CI を実行しているワークフローの名前を記載する
+  pull_request_review:
     types:
-      - completed
+      - submitted
 
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
 
     if: |
-      github.actor == 'dependabot[bot]' &&
-      github.event.workflow_run.conclusion == 'success'
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.review.state == 'approved'
 
     steps:
 
-      - name: Dependabot metadata
-        id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v1.1.1
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-
       - name: Order Dependabot to merge
-        if: |
-          ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
         run: gh pr comment --body "@dependabot squash and merge" "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
