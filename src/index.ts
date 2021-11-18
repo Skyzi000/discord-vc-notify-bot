@@ -22,11 +22,14 @@ if (process.env.NODE_ENV === "production") {
     else {
         discordBotToken = readFileSync(tokenFile, "utf-8").trim();
     }
-
-    botVersion = process.env.npm_package_version
-        ?? existsSync("./package.json") ? require("./package.json").version
-        : existsSync("../package.json") ? require("../package.json").version
-            : "不明";
+    try {
+        botVersion = process.env.npm_package_version
+            ?? existsSync("./package.json") ? require("./package.json").version
+            : existsSync("../package.json") ? require("../package.json").version
+                : "不明";
+    } catch (err) {
+        console.error(err);
+    }
 
 }
 else {
