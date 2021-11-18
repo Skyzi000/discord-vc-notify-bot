@@ -61,6 +61,15 @@ client.on("message", async message => {
         const cmds = message.content.split(" ").slice(1).filter((value) => value.trim() !== "");
         console.log(`Commands: ${cmds.join(", ")}`);
         switch (cmds[0]?.trim()) {
+
+            case "v":
+            case "V":
+            case "ver":
+            case "version":
+            case "about":
+                message.reply(`${process.env.npm_package_name}\nVersion ${process.env.npm_package_version}`);
+                break;
+
             case "setnc":
             case "set_notification_channel":
             case "通知チャンネル":
@@ -85,6 +94,7 @@ client.on("message", async message => {
                     }
                 }
                 break;
+
             case "delnc":
             case "rmnc":
             case "delete_notification_channel":
