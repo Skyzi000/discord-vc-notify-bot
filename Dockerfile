@@ -3,7 +3,7 @@ FROM node:alpine as builder
 WORKDIR /build
 
 COPY package*.json .
-RUN npm install
+RUN npm ci
 
 COPY . .
 
@@ -12,10 +12,12 @@ RUN npm run build
 
 FROM node:alpine as module
 
+ENV NODE_ENV=production
+
 WORKDIR /module
 
 COPY package*.json .
-RUN npm install --production
+RUN npm ci --production
 
 
 FROM alpine:latest as production
