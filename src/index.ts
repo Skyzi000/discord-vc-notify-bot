@@ -67,7 +67,8 @@ client.on("message", async message => {
             case "ver":
             case "version":
             case "about":
-                message.reply(`${process.env.npm_package_name}\nVersion ${process.env.npm_package_version}`);
+                const pj = require("../package.json");
+                message.reply(`${pj.name}\nVersion ${pj.version}`);
                 break;
 
             case "setnc":
@@ -161,6 +162,6 @@ console.log(`
 |___/\\____/  /_/ |_/\\____/\\__/_/_/  \\__, /  /_____/\\____/\\__/
                                    /____/
 `);
-console.log(`${process.env.npm_package_name}\nVersion ${process.env.npm_package_version}`);
+console.log(`Version ${require("../package.json").version}`);
 
 client.login(discordBotToken);
