@@ -33,6 +33,7 @@ RUN apk update &&\
 COPY --from=module /usr/local/bin/node /usr/local/bin/node
 # copy modules
 COPY --from=module /module/node_modules ./node_modules
+COPY --from=module /module/package.json .
 # copy app
 COPY --from=builder /build/dist .
 
