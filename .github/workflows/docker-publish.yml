@@ -7,17 +7,17 @@ name: Docker
 
 on:
   schedule:
-    - cron: '15 4 * * *'
+    - cron: "15 4 * * *"
   push:
-    branches: [ main ]
+    branches: [main]
     paths-ignore:
-      - '**.md'
+      - "**.md"
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ["v*.*.*"]
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths-ignore:
-      - '**.md'
+      - "**.md"
   pull_request_target:
     branches: [main]
 
@@ -28,10 +28,8 @@ env:
   IMAGE_NAME: discord-vc-notify-bot
   DOCKERHUB_USERNAME: skyzi000
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read

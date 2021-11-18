@@ -14,7 +14,6 @@ jobs:
       github.event.review.state == 'approved'
 
     steps:
-
       - name: Order Dependabot to merge
         run: gh pr comment --body "@dependabot squash and merge" "$PR_URL"
         env:
