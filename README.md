@@ -1,6 +1,6 @@
 # Discord VC開始通知Bot
 
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Skyzi000/discord-vc-notify-bot?label=latest)](https://github.com/Skyzi000/discord-vc-notify-bot/pkgs/container/jmusicbot-jp-docker)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/skyzi000/discord-vc-notify-bot/latest)](https://hub.docker.com/r/skyzi000/discord-vc-notify-bot/tags)
 [![Docker Pulls](https://img.shields.io/docker/pulls/skyzi000/discord-vc-notify-bot)](https://hub.docker.com/r/skyzi000/discord-vc-notify-bot)
 [![Last Commit](https://img.shields.io/github/last-commit/Skyzi000/discord-vc-notify-bot)](https://github.com/Skyzi000/discord-vc-notify-bot/commits)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Skyzi000/discord-vc-notify-bot/Docker)](https://github.com/Skyzi000/discord-vc-notify-bot/actions/workflows/docker-publish.yml)
