@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "fs";
 import Keyv from 'keyv';
 
 let discordBotToken: string;
+let botVersion: string | undefined;
 
 if (process.env.NODE_ENV === "production") {
     const tokenFile = process.env.DISCORD_BOT_TOKEN_FILE;
@@ -21,6 +22,12 @@ if (process.env.NODE_ENV === "production") {
     else {
         discordBotToken = readFileSync(tokenFile, "utf-8").trim();
     }
+
+    botVersion = process.env.npm_package_version
+        ?? existsSync("./package.json") ? require("./package.json").version
+        : existsSync("../package.json") ? require("../package.json").version
+            : "不明";
+
 }
 else {
     // .envファイルから環境変数の読み込み
@@ -30,6 +37,7 @@ else {
         process.exit(1);
     }
     discordBotToken = process.env.DISCORD_BOT_TOKEN;
+    botVersion = process.env.npm_package_version ?? "不明";
 }
 
 const notifyChannelData: { [guildId: string]: Keyv } = {};
@@ -67,8 +75,7 @@ client.on("message", async message => {
             case "ver":
             case "version":
             case "about":
-                const pj = require("../package.json");
-                message.reply(`${pj.name}\nVersion ${pj.version}`);
+                message.reply(`Version ${botVersion}`);
                 break;
 
             case "setnc":
@@ -162,6 +169,7 @@ console.log(`
 |___/\\____/  /_/ |_/\\____/\\__/_/_/  \\__, /  /_____/\\____/\\__/
                                    /____/
 `);
-console.log(`Version ${require("../package.json").version}`);
+
+console.log(`Version ${botVersion}`);
 
 client.login(discordBotToken);
