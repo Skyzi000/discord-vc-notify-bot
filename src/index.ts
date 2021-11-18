@@ -143,4 +143,14 @@ async function delNotifyChannel(guildId: string, categoryId: string | null) {
     return await notifyChannelData[guildId].delete(categoryId ?? "null");
 }
 
+console.log(`
+ _    ________   _   __      __  _ ____         ____        __
+| |  / / ____/  / | / /___  / /_(_) __/_  __   / __ )____  / /_
+| | / / /      /  |/ / __ \\/ __/ / /_/ / / /  / __  / __ \\/ __/
+| |/ / /___   / /|  / /_/ / /_/ / __/ /_/ /  / /_/ / /_/ / /_
+|___/\\____/  /_/ |_/\\____/\\__/_/_/  \\__, /  /_____/\\____/\\__/
+                                   /____/
+`);
+console.log(`${process.env.npm_package_name}\nVersion ${process.env.npm_package_version}`);
+
 client.login(discordBotToken);
