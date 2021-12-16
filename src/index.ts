@@ -64,7 +64,7 @@ client.once("ready", async () => {
 
 client.on("voiceStateUpdate", async (os, ns) => onVoiceStateUpdate(os, ns));
 
-client.on("message", async message => {
+client.on("messageCreate", async message => {
     if (message.author.bot || message.guildId == null || client.user == null || !(message.channel.type === "GUILD_TEXT" || message.channel.type === "GUILD_NEWS")) {
         return;
     }
