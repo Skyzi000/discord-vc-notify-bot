@@ -19,7 +19,7 @@
   "author": "Skyzi000",
   "license": "MIT",
   "dependencies": {
-    "@keyv/sqlite": "^3.0.0",
+    "@keyv/sqlite": "^2.1.0",
     "discord.js": "^13.3.1",
     "keyv": "^4.0.5"
   },
