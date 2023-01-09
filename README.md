@@ -3,7 +3,7 @@
 [![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/skyzi000/discord-vc-notify-bot/latest)](https://hub.docker.com/r/skyzi000/discord-vc-notify-bot/tags)
 [![Docker Pulls](https://img.shields.io/docker/pulls/skyzi000/discord-vc-notify-bot)](https://hub.docker.com/r/skyzi000/discord-vc-notify-bot)
 [![Last Commit](https://img.shields.io/github/last-commit/Skyzi000/discord-vc-notify-bot)](https://github.com/Skyzi000/discord-vc-notify-bot/commits)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Skyzi000/discord-vc-notify-bot/Docker)](https://github.com/Skyzi000/discord-vc-notify-bot/actions/workflows/docker-publish.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Skyzi000/discord-vc-notify-bot/docker-publish.yml)](https://github.com/Skyzi000/discord-vc-notify-bot/actions/workflows/docker-publish.yml)
 
 ![example](https://raw.githubusercontent.com/Skyzi000/discord-vc-notify-bot/main/images/example.png)
 
